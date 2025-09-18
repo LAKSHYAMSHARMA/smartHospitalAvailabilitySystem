@@ -1,24 +1,72 @@
 package com.narcissisticengineer.smartHospitalAvailabilitySystem.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class Hospital {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long HospitalId;
+    private Long id;
 
-    private String HospitalName;
 
-    private String HospitalType;
+    @Column(name = "hospital_name", nullable = false)
+    private String name;
 
-    private long NumberOfBedAvailable;
+    @Column(nullable = false)
+    private String address;
 
-    private double Location;
+    @Column(nullable = false)
+    private String city;
+
+    @Column(name = "contact_number", nullable = false, unique = true)
+    private String contactNumber;
+
+    @Column(nullable = false)
+    private Double latitude;
+
+    @Column(nullable = false)
+    private Double longitude;
+
+    @Column(name = "available_icu_beds")
+    private int availableIcuBeds = 0;
+
+    @Column(name = "available_general_beds")
+    private int availableGeneralBeds = 0;
+
+    @Column(name = "available_ventilator_beds")
+    private int availableVentilatorBeds = 0;
+
+    @Column(name = "available_doctors")
+    private int availableDoctors = 0;
+
+    @Column(name = "blood_a_positive")
+    private int bloodAPositive = 0;
+
+    @Column(name = "blood_a_negative")
+    private int bloodANegative = 0;
+
+    @Column(name = "blood_b_positive")
+    private int bloodBPositive = 0;
+
+    @Column(name = "blood_b_negative")
+    private int bloodBNegative = 0;
+
+    @Column(name = "blood_ab_positive")
+    private int bloodAbPositive = 0;
+
+    @Column(name = "blood_ab_negative")
+    private int bloodAbNegative = 0;
+
+    @Column(name = "blood_o_positive")
+    private int bloodOPositive = 0;
+
+    @Column(name = "blood_o_negative")
+    private int bloodONegative = 0;
+
 }

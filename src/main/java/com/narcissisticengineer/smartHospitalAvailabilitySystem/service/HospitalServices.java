@@ -1,8 +1,14 @@
 package com.narcissisticengineer.smartHospitalAvailabilitySystem.service;
 
-import org.springframework.stereotype.Service;
+import com.narcissisticengineer.smartHospitalAvailabilitySystem.dto.HospitalDTO;
 
-@Service
-public class HospitalServices {
+import java.util.List;
 
+
+public interface HospitalServices{
+    HospitalDTO createHospital(HospitalDTO hospitalDTO);
+    List<HospitalDTO> getAllHospitals();
+    HospitalDTO getHospitalById(Long id);
+    HospitalDTO updateHospital(Long id, HospitalDTO hospitalDTO);
+    void deleteHospital(Long id);
 }
