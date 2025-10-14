@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -61,4 +63,5 @@ public class HospitalDTO {
     @NotNull @Min(0) private int bloodOPositive;
     @NotNull @Min(0) private int bloodONegative;
 
+    private List<DoctorDTO> doctors;
 }

@@ -1,6 +1,8 @@
 package com.narcissisticengineer.smartHospitalAvailabilitySystem.controller;
 
+import com.narcissisticengineer.smartHospitalAvailabilitySystem.dto.DoctorDTO;
 import com.narcissisticengineer.smartHospitalAvailabilitySystem.dto.HospitalDTO;
+import com.narcissisticengineer.smartHospitalAvailabilitySystem.service.DoctorServices;
 import com.narcissisticengineer.smartHospitalAvailabilitySystem.service.HospitalServices;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -14,9 +16,11 @@ import java.util.List;
 public class HospitalController {
 
     private final HospitalServices hospitalService;
+    private final DoctorServices doctorService;
 
-    public HospitalController(HospitalServices hospitalService) {
+    public HospitalController(HospitalServices hospitalService, DoctorServices doctorService) {
         this.hospitalService = hospitalService;
+        this.doctorService = doctorService;
     }
 
     @PostMapping
@@ -47,5 +51,21 @@ public class HospitalController {
     public ResponseEntity<Void> deleteHospital(@PathVariable Long id) {
         hospitalService.deleteHospital(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{hospitalId}/doctors")
+    public ResponseEntity<DoctorDTO> addDoctorToHospital(
+            @PathVariable Long hospitalId,
+            @Valid @RequestBody DoctorDTO doctorDTO) {
+        doctorDTO.setHospitalId(hospitalId);
+        DoctorDTO createdDoctor = doctorService.addDoctor(doctorDTO);
+        return new ResponseEntity<>(createdDoctor, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{hospitalId}/doctors")
+    public ResponseEntity<List<DoctorDTO>> getDoctorsForHospital(@PathVariable Long hospitalId) {
+
+        List<DoctorDTO> doctors = doctorService.getDoctorsByHospital(hospitalId);
+        return ResponseEntity.ok(doctors);
     }
 }

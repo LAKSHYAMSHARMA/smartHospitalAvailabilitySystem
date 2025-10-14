@@ -3,6 +3,9 @@ package com.narcissisticengineer.smartHospitalAvailabilitySystem.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,7 +16,6 @@ public class Hospital {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @Column(name = "hospital_name", nullable = false)
     private String name;
@@ -69,4 +71,11 @@ public class Hospital {
     @Column(name = "blood_o_negative")
     private int bloodONegative = 0;
 
+    @OneToMany(
+            mappedBy = "hospital",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<Doctor> doctors = new ArrayList<>();
 }
