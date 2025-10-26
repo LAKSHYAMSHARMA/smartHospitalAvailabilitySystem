@@ -78,4 +78,12 @@ public class Hospital {
             fetch = FetchType.LAZY
     )
     private List<Doctor> doctors = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "hospital",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<Ambulance> ambulances = new ArrayList<>();
 }

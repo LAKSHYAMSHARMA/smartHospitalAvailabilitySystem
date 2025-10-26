@@ -1,5 +1,7 @@
 package com.narcissisticengineer.smartHospitalAvailabilitySystem.service.implementation;
 
+import com.narcissisticengineer.smartHospitalAvailabilitySystem.dto.AmbulanceDTO;
+import com.narcissisticengineer.smartHospitalAvailabilitySystem.dto.DoctorDTO;
 import com.narcissisticengineer.smartHospitalAvailabilitySystem.dto.HospitalDTO;
 import com.narcissisticengineer.smartHospitalAvailabilitySystem.entity.Hospital;
 import com.narcissisticengineer.smartHospitalAvailabilitySystem.tools.exceptions.ResourceNotFoundException;
@@ -47,33 +49,15 @@ public class HospitalServicesImplementation implements HospitalServices {
 
     @Override
     public HospitalDTO updateHospital(Long id, HospitalDTO hospitalDTO) {
+
         Hospital existingHospital = hospitalRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Hospital", "id", id));
 
-        existingHospital.setName(hospitalDTO.getName());
-        existingHospital.setAddress(hospitalDTO.getAddress());
-        existingHospital.setCity(hospitalDTO.getCity());
-        existingHospital.setContactNumber(hospitalDTO.getContactNumber());
-        existingHospital.setLatitude(hospitalDTO.getLatitude());
-        existingHospital.setLongitude(hospitalDTO.getLongitude());
-
-        existingHospital.setAvailableIcuBeds(hospitalDTO.getAvailableIcuBeds());
-        existingHospital.setAvailableGeneralBeds(hospitalDTO.getAvailableGeneralBeds());
-        existingHospital.setAvailableVentilatorBeds(hospitalDTO.getAvailableVentilatorBeds());
-        existingHospital.setAvailableDoctors(hospitalDTO.getAvailableDoctors());
-
-        existingHospital.setBloodAPositive(hospitalDTO.getBloodAPositive());
-        existingHospital.setBloodANegative(hospitalDTO.getBloodANegative());
-        existingHospital.setBloodBPositive(hospitalDTO.getBloodBPositive());
-        existingHospital.setBloodBNegative(hospitalDTO.getBloodBNegative());
-        existingHospital.setBloodAbPositive(hospitalDTO.getBloodAbPositive());
-        existingHospital.setBloodAbNegative(hospitalDTO.getBloodAbNegative());
-        existingHospital.setBloodOPositive(hospitalDTO.getBloodOPositive());
-        existingHospital.setBloodONegative(hospitalDTO.getBloodONegative());
-
+        modelMapper.map(hospitalDTO, existingHospital);
 
         Hospital updatedHospital = hospitalRepository.save(existingHospital);
-        return modelMapper.map(updatedHospital, HospitalDTO.class);
+
+        return convertToDto(updatedHospital);
     }
 
     @Override
@@ -81,5 +65,25 @@ public class HospitalServicesImplementation implements HospitalServices {
         Hospital hospital = hospitalRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Hospital", "id", id));
         hospitalRepository.delete(hospital);
+    }
+
+    private HospitalDTO convertToDto(Hospital hospital) {
+        HospitalDTO hospitalDTO = modelMapper.map(hospital, HospitalDTO.class);
+
+        if (hospital.getDoctors() != null) {
+            List<DoctorDTO> doctorDTOs = hospital.getDoctors().stream()
+                    .map(doctor -> modelMapper.map(doctor, DoctorDTO.class))
+                    .collect(Collectors.toList());
+            hospitalDTO.setDoctors(doctorDTOs);
+        }
+
+        if (hospital.getAmbulances() != null) {
+            List<AmbulanceDTO> ambulanceDTOs = hospital.getAmbulances().stream()
+                    .map(ambulance -> modelMapper.map(ambulance, AmbulanceDTO.class))
+                    .collect(Collectors.toList());
+            hospitalDTO.setAmbulances(ambulanceDTOs);
+        }
+
+        return hospitalDTO;
     }
 }

@@ -1,7 +1,9 @@
 package com.narcissisticengineer.smartHospitalAvailabilitySystem.controller;
 
+import com.narcissisticengineer.smartHospitalAvailabilitySystem.dto.AmbulanceDTO;
 import com.narcissisticengineer.smartHospitalAvailabilitySystem.dto.DoctorDTO;
 import com.narcissisticengineer.smartHospitalAvailabilitySystem.dto.HospitalDTO;
+import com.narcissisticengineer.smartHospitalAvailabilitySystem.service.AmbulanceServices;
 import com.narcissisticengineer.smartHospitalAvailabilitySystem.service.DoctorServices;
 import com.narcissisticengineer.smartHospitalAvailabilitySystem.service.HospitalServices;
 import jakarta.validation.Valid;
@@ -17,10 +19,12 @@ public class HospitalController {
 
     private final HospitalServices hospitalService;
     private final DoctorServices doctorService;
+    private final AmbulanceServices ambulanceService;
 
-    public HospitalController(HospitalServices hospitalService, DoctorServices doctorService) {
+    public HospitalController(HospitalServices hospitalService, DoctorServices doctorService, AmbulanceServices ambulanceService) {
         this.hospitalService = hospitalService;
         this.doctorService = doctorService;
+        this.ambulanceService = ambulanceService;
     }
 
     @PostMapping
@@ -67,5 +71,21 @@ public class HospitalController {
 
         List<DoctorDTO> doctors = doctorService.getDoctorsByHospital(hospitalId);
         return ResponseEntity.ok(doctors);
+    }
+
+    @PostMapping("/{hospitalId}/ambulances")
+    public ResponseEntity<AmbulanceDTO> addAmbulanceToHospital(
+            @PathVariable Long hospitalId,
+            @Valid @RequestBody AmbulanceDTO ambulanceDTO) {
+
+        ambulanceDTO.setHospitalId(hospitalId);
+        AmbulanceDTO createdAmbulance = ambulanceService.addAmbulance(ambulanceDTO);
+        return new ResponseEntity<>(createdAmbulance, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{hospitalId}/ambulances")
+    public ResponseEntity<List<AmbulanceDTO>> getAmbulancesForHospital(@PathVariable Long hospitalId) {
+        List<AmbulanceDTO> ambulances = ambulanceService.getAmbulancesByHospital(hospitalId);
+        return ResponseEntity.ok(ambulances);
     }
 }

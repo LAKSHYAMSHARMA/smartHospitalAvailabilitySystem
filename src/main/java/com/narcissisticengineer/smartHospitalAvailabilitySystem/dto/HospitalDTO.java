@@ -15,7 +15,6 @@ public class HospitalDTO {
 
     private Long id;
 
-
     @NotEmpty(message = "Hospital name cannot be empty")
     @Size(min = 3, message = "Hospital name must be at least 3 characters long")
     private String name;
@@ -64,4 +63,6 @@ public class HospitalDTO {
     @NotNull @Min(0) private int bloodONegative;
 
     private List<DoctorDTO> doctors;
+
+    private List<AmbulanceDTO> ambulances;
 }
